@@ -94,6 +94,7 @@ public class SelectableDragAndRotate : MonoBehaviour
         {
             meshRenderer.material = startMatrial;
             isSelected = false;
+            isRotating = false;
         }
 
     }
