@@ -20,6 +20,9 @@ public class FreeCameraMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moving camera with w, s, a , d
+    /// </summary>
     void HandleMovement()
     {
         // Get input for movement
@@ -33,7 +36,9 @@ public class FreeCameraMovement : MonoBehaviour
         Vector3 targetPosition = transform.position + inputDirection.normalized * movementSpeed * Time.deltaTime;
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
     }
-
+    /// <summary>
+    // Rotating camera based on Mouse position
+    /// </summary>
     void HandleRotation()
     {
         if (Input.GetMouseButton(1)) // Rotate only when right mouse button is pressed

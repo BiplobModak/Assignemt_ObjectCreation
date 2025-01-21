@@ -5,6 +5,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// It will determined what type of object is this
@@ -60,11 +61,7 @@ public class SceneManager : MonoBehaviour
         LoadScene();
     }
 
-    // Example method to demonstrate usage
-    public void DoSomething()
-    {
-        Debug.Log("Singleton instance is working!");
-    }
+    
     #endregion
 
     #region Object Selection operations 
@@ -72,7 +69,7 @@ public class SceneManager : MonoBehaviour
     void Update()
     {
         //Create
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
         {
             // Create a ray from the camera's position in the direction it is facing
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -114,6 +111,23 @@ public class SceneManager : MonoBehaviour
             ObjectDeSelect();
         }
 
+    }
+    /// <summary>
+    /// Checking if pointer on ui or not
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPointerOverUI()
+    {
+        // Create a pointer event
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition; // Use the mouse position or any screen point
+
+        // Ray cast using the current event system
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        // Check if we hit any UI elements
+        return results.Count > 0;
     }
     /// <summary>
     /// Object deselected operations here
@@ -175,7 +189,9 @@ public class SceneManager : MonoBehaviour
 
     #region DataSave operations are here
     public string saveFileName = "sceneData.json";
-
+    /// <summary>
+    /// Saveing scene data
+    /// </summary>
     public void SaveScene()
     {
         SceneData sceneData = new SceneData();
@@ -199,6 +215,9 @@ public class SceneManager : MonoBehaviour
 
         Debug.Log("Scene saved to " + Path.Combine(Application.persistentDataPath, saveFileName));
     }
+    /// <summary>
+    /// Call before Application quit
+    /// </summary>
     private void OnApplicationQuit()
     {
         SaveScene();
@@ -206,7 +225,9 @@ public class SceneManager : MonoBehaviour
 
     #endregion
     #region Data Load operations are here
-
+    /// <summary>
+    /// Load scene data 
+    /// </summary>
     public void LoadScene()
     {
         string filePath = Path.Combine(Application.persistentDataPath, saveFileName);
